@@ -1,0 +1,66 @@
+ball-move.lzh
+#ブロック崩し
+from tkinter import *
+
+＃ボールを表す辞書型データ　ーーー（＊１）
+ball={
+         "dirx":15,#X方向のボールの速さ
+         "dirx":-15, #Y方向のボールの速さ
+         "X": 350,#ボールの位置
+         "Y": 300,
+         "W": 10, #ボールの幅
+    　}
+
+＃  ウィンドウの作成　ーーー（＊２）
+win = Tk()
+cv = Canvas(win,width = 600,height = 400)
+cv.park()
+
+# 画面を描画する　ーーー（＊３）
+def draw_objects():
+    cv.delete (`all`) #既存の描画を破棄
+    ＃　ボールを描画 
+    cv.create_oval(
+        ball["X"] - ball["W"],ball["Y"] - ball["W"],
+        ball["X"] + ball["W"],ball["Y"] - ball["W"],
+        fill="green")
+
+#ボールの移動　ーーー（＊４）
+def move_ball():
+    # 仮の変数に移動後の値を記録
+    bx = ball["X"] + ball["dirx"]
+    by = ball["Y"] + ball["dirx"]
+    # 上左右の壁に当たった？
+    if bx < 0 or bx > 600: ball ["dirx"] *＝　-1
+    if by < 0 or by > 400: ball ["dirx"] *＝　-1
+    # 移動内容を反映
+    if 0 <= bx <= 600: ball["X"] = bx
+    if 0 <= by <= 400: ball["Y"] = by
+
+# ゲームループ　ーーー　（＊５）
+def game_loop():
+    draw_objects()    
+    move_ ball()
+    win.after(50,game_loop)
+
+game_loop()
+win.mainloop() # ゲームウィンドウを表示
+
+blocks = [] # ブロックを管理する配列
+#　・・・　省略　・・・
+#　ブロックを配置する
+for iy in range(0,5):
+    for ix in range(0,8):
+        color = "red"
+        if (iy + ix) % 2 == 1: color = "blue"
+        x1 = 4 + ix *　block_size ["X"]
+        x2 = x1 + block_size["X"]
+        y1 = 4 + iy * block_size["y"]
+        y2 = y1 + block_size["y"]
+        blocks.append([x1,y1,x2,y2,color])
+
+#　ブロックを一つずつ描画
+for W in blocks:
+    x1,y1,x2,y2,c =W
+    cv.create_rectangle(x1,y1,x2,y2,fill=c,width=0)
+    
